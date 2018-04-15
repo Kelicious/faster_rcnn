@@ -1,0 +1,995 @@
+annotating:
+python src/annotate_video.py models/final_kitti_r101_trainval/rpn_model_r101_noreg_step3_kitti_trainval.h5 models/final_kitti_r101_trainval/detector_model_r101_noreg_step4_kitti_trainval.h5 /workplace/aind2/videos/youtube_driving.mp4 --out_dir ./images_out
+
+training vgg16 on voc trainval
+python faster_rcnn/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network vgg16 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_vgg16_noreg_step1_voc20072012_trainval.h5 --save_model_dest models/rpn_model_vgg16_noreg_step1_voc20072012_trainval.h5 2>&1 | tee train_vgg16_rpn_step1_tmp
+python faster_rcnn/train_det_step2.py models/rpn_weights_vgg16_noreg_step1_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network vgg16 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_vgg16_noreg_step2_voc20072012_trainval.h5 --save_model_dest models/detector_model_vgg16_noreg_step2_voc20072012_trainval.h5 2>&1 | tee train_vgg16_det_step2_tmp
+python faster_rcnn/train_rpn_step3.py --step2_weights_path models/detector_weights_vgg16_noreg_step2_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network vgg16 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_vgg16_noreg_step3_voc20072012_trainval.h5 --save_model_dest models/rpn_model_vgg16_noreg_step3_voc20072012_trainval.h5 2>&1 | tee train_vgg16_rpn_step3_tmp
+python faster_rcnn/train_det_step4.py models/rpn_weights_vgg16_noreg_step3_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network vgg16 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_vgg16_noreg_step4_voc20072012_trainval.h5 --save_model_dest models/detector_model_vgg16_noreg_step4_voc20072012_trainval.h5 --save_rpn_model_dest models/rpn_model_vgg16_noreg_step3_voc20072012_trainval.h5 2>&1 | tee train_vgg16_det_step4_tmp
+
+training r50 on voc trainval
+python faster_rcnn/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_r50_fullreg_step1_voc20072012_trainval.h5 --save_model_dest models/rpn_model_r50_fullreg_step1_voc20072012_trainval.h5 2>&1 | tee train_r50_rpn_step1_tmp
+python faster_rcnn/train_det_step2.py models/rpn_weights_r50_fullreg_step1_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_r50_fullreg_step2_voc20072012_trainval.h5 --save_model_dest models/detector_model_r50_fullreg_step2_voc20072012_trainval.h5 2>&1 | tee train_r50_det_step2_tmp
+python faster_rcnn/train_rpn_step3.py --step2_weights_path models/detector_weights_r50_fullreg_step2_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_r50_fullreg_step3_voc20072012_trainval.h5 --save_model_dest models/rpn_model_r50_fullreg_step3_voc20072012_trainval.h5 2>&1 | tee train_r50_rpn_step3_tmp
+python faster_rcnn/train_det_step4.py models/rpn_weights_r50_fullreg_step3_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_r50_fullreg_step4_voc20072012_trainval.h5 --save_model_dest models/detector_model_r50_fullreg_step4_voc20072012_trainval.h5 --save_rpn_model_dest models/rpn_model_r50_fullreg_step3_voc20072012_trainval.h5 2>&1 | tee train_r50_det_step4_tmp
+
+training r50 on voc trainval adam
+python faster_rcnn/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-4,20000:1e-5 --optimizer adam --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_r50_fullreg_adam_step1_voc20072012_trainval.h5 --save_model_dest models/rpn_model_r50_fullreg_adam_step1_voc20072012_trainval.h5 2>&1 | tee train_r50_rpn_step1_tmp
+python faster_rcnn/train_det_step2.py models/rpn_weights_r50_fullreg_adam_step1_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-4,20000:1e-5 --optimizer adam --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_r50_fullreg_adam_step2_voc20072012_trainval.h5 --save_model_dest models/detector_model_r50_fullreg_adam_step2_voc20072012_trainval.h5 2>&1 | tee train_r50_det_step2_tmp
+python faster_rcnn/train_rpn_step3.py --step2_weights_path models/detector_weights_r50_fullreg_adam_step2_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-4,20000:1e-5 --optimizer adam --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_r50_fullreg_adam_step3_voc20072012_trainval.h5 --save_model_dest models/rpn_model_r50_fullreg_adam_step3_voc20072012_trainval.h5 2>&1 | tee train_r50_rpn_step3_tmp
+python faster_rcnn/train_det_step4.py models/rpn_weights_r50_fullreg_adam_step3_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-4,20000:1e-5 --optimizer adam --img_set trainval --network resnet50 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_r50_fullreg_adam_step4_voc20072012_trainval.h5 --save_model_dest models/detector_model_r50_fullreg_adam_step4_voc20072012_trainval.h5 --save_rpn_model_dest models/rpn_model_r50_fullreg_adam_step3_voc20072012_trainval.h5 2>&1 | tee train_r50_det_step4_tmp
+
+
+training r101 on voc trainval
+python faster_rcnn/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_r101_fullreg_step1_voc20072012_trainval.h5 --save_model_dest models/rpn_model_r101_fullreg_step1_voc20072012_trainval.h5 2>&1 | tee train_r101_rpn_step1_tmp
+python faster_rcnn/train_det_step2.py models/rpn_weights_r101_fullreg_step1_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_r101_fullreg_step2_voc20072012_trainval.h5 --save_model_dest models/detector_model_r101_fullreg_step2_voc20072012_trainval.h5 2>&1 | tee train_r101_det_step2_tmp
+python faster_rcnn/train_rpn_step3.py --step2_weights_path models/detector_weights_r101_fullreg_step2_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/rpn_weights_r101_fullreg_step3_voc20072012_trainval.h5 --save_model_dest models/rpn_model_r101_fullreg_step3_voc20072012_trainval.h5 2>&1 | tee train_r101_rpn_step3_tmp
+python faster_rcnn/train_det_step4.py models/rpn_weights_r101_fullreg_step3_voc20072012_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/VOC2007/,/workplace/aind2/VOCdevkit/VOC2012/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --anchor_scales 128,256,512 --resize_dims 600,1000 --save_weights_dest models/detector_weights_r101_fullreg_step4_voc20072012_trainval.h5 --save_model_dest models/detector_model_r101_fullreg_step4_voc20072012_trainval.h5 --save_rpn_model_dest models/rpn_model_r101_fullreg_step3_voc20072012_trainval.h5 2>&1 | tee train_r101_det_step4_tmp
+
+training r50 on kitti train
+python faster_rcnn/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet50 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r50_fullreg_step1_kitti_train.h5 --save_model_dest models/rpn_model_r50_fullreg_step1_kitti_train.h5 2>&1 | tee train_r50_rpn_step1_tmp
+python faster_rcnn/train_det_step2.py models/rpn_weights_r50_fullreg_step1_kitti_train.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet50 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r50_fullreg_step2_kitti_train.h5 --save_model_dest models/detector_model_r50_fullreg_step2_kitti_train.h5 2>&1 | tee train_r50_det_step2_tmp
+python faster_rcnn/train_rpn_step3.py --step2_weights_path models/detector_weights_r50_fullreg_step2_kitti_train.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet50 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r50_fullreg_step3_kitti_train.h5 --save_model_dest models/rpn_model_r50_fullreg_step3_kitti_train.h5 2>&1 | tee train_r50_rpn_step3_tmp
+python faster_rcnn/train_det_step4.py models/rpn_weights_r50_fullreg_step3_kitti_train.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet50 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r50_fullreg_step4_kitti_train.h5 --save_model_dest models/detector_model_r50_fullreg_step4_kitti_train.h5 --save_rpn_model_dest models/rpn_model_r50_fullreg_step3_kitti_train.h5 2>&1 | tee train_r50_det_step4_tmp
+
+training r101 on kitti train
+python faster_rcnn/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet101 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r101_fullreg_step1_kitti_train.h5 --save_model_dest models/rpn_model_r101_fullreg_step1_kitti_train.h5 2>&1 | tee train_r101_rpn_step1_tmp
+python faster_rcnn/train_det_step2.py models/rpn_weights_r101_fullreg_step1_kitti_train.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet101 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r101_fullreg_step2_kitti_train.h5 --save_model_dest models/detector_model_r101_fullreg_step2_kitti_train.h5 2>&1 | tee train_r101_det_step2_tmp
+python faster_rcnn/train_rpn_step3.py --step2_weights_path models/detector_weights_r101_fullreg_step2_kitti_train.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet101 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r101_fullreg_step3_kitti_train.h5 --save_model_dest models/rpn_model_r101_fullreg_step3_kitti_train.h5 2>&1 | tee train_r101_rpn_step3_tmp
+python faster_rcnn/train_det_step4.py models/rpn_weights_r101_fullreg_step3_kitti_train.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet101 --anchor_scales 16,32,64,128,256,512 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r101_fullreg_step4_kitti_train.h5 --save_model_dest models/detector_model_r101_fullreg_step4_kitti_train.h5 --save_rpn_model_dest models/rpn_model_r101_fullreg_step3_kitti_train.h5 2>&1 | tee train_r101_det_step4_tmp
+
+training r50 on kitti train without step2
+python src/train_rpn_step3.py --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet50 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r50_fullreg_step3_kitti_train.h5 --save_model_dest models/rpn_model_r50_fullreg_step3_kitti_train.h5 2>&1 | tee train_r50_rpn_step3_tmp
+python src/train_det_step4.py models/rpn_weights_r50_fullreg_step3_kitti_train.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set train --network resnet50 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r50_fullreg_step4_kitti_train.h5 --save_model_dest models/detector_model_r50_fullreg_step4_kitti_train.h5 --save_rpn_model_dest models/rpn_model_r50_fullreg_step3_kitti_train.h5 2>&1 | tee train_r50_det_step4_tmp
+
+training r50 on kitti trainval
+python src/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r50_noreg_step1_kitti_trainval.h5 --save_model_dest models/rpn_model_r50_noreg_step1_kitti_trainval.h5 2>&1 | tee train_r50_rpn_step1_tmp
+python src/train_det_step2.py models/rpn_weights_r50_noreg_step1_kitti_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r50_noreg_step2_kitti_trainval.h5 --save_model_dest models/detector_model_r50_noreg_step2_kitti_trainval.h5 2>&1 | tee train_r50_det_step2_tmp
+python src/train_rpn_step3.py --step2_weights_path models/detector_weights_r50_noreg_step2_kitti_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r50_noreg_step3_kitti_trainval.h5 --save_model_dest models/rpn_model_r50_noreg_step3_kitti_trainval.h5 2>&1 | tee train_r50_rpn_step3_tmp
+python src/train_det_step4.py models/rpn_weights_r50_noreg_step3_kitti_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet50 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r50_noreg_step4_kitti_trainval.h5 --save_model_dest models/detector_model_r50_noreg_step4_kitti_trainval.h5 --save_rpn_model_dest models/rpn_model_r50_noreg_step3_kitti_trainval.h5 2>&1 | tee train_r50_det_step4_tmp
+
+training r101 on kitti trainval
+python src/train_rpn_step1.py --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r101_noreg_step1_kitti_trainval.h5 --save_model_dest models/rpn_model_r101_noreg_step1_kitti_trainval.h5 2>&1 | tee train_r101_rpn_step1_tmp
+python src/train_det_step2.py models/rpn_weights_r101_noreg_step1_kitti_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r101_noreg_step2_kitti_trainval.h5 --save_model_dest models/detector_model_r101_noreg_step2_kitti_trainval.h5 2>&1 | tee train_r101_det_step2_tmp
+python src/train_rpn_step3.py --step2_weights_path models/detector_weights_r101_noreg_step2_kitti_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --resize_dims 600,1500 --save_weights_dest models/rpn_weights_r101_noreg_step3_kitti_trainval.h5 --save_model_dest models/rpn_model_r101_noreg_step3_kitti_trainval.h5 2>&1 | tee train_r101_rpn_step3_tmp
+python src/train_det_step4.py models/rpn_weights_r101_noreg_step3_kitti_trainval.h5 --voc_paths /workplace/aind2/VOCdevkit/kitti/ --kitti --phases 60000:1e-3,20000:1e-4 --optimizer sgd --img_set trainval --network resnet101 --resize_dims 600,1500 --save_weights_dest models/detector_weights_r101_noreg_step4_kitti_trainval.h5 --save_model_dest models/detector_model_r101_noreg_step4_kitti_trainval.h5 --save_rpn_model_dest models/rpn_model_r101_noreg_step3_kitti_trainval.h5 2>&1 | tee train_r101_det_step4_tmp
+
+Running r50 on voc 2007 test noreg
+python faster_rcnn/voc_dets.py models/voc_r50_noreg_trainval/rpn_model_r50_noreg_step3_voc20072012_trainval.h5 models/voc_r50_noreg_trainval/detector_model_r50_noreg_step4_voc20072012_trainval.h5 --voc_path /workplace/aind2/VOCtest/VOC2007/ --det_threshold 0.0 --resize_dims 600,1000 --img_set test --network resnet50 --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r50 on voc 2007 test fullreg
+python faster_rcnn/voc_dets.py models/voc_r50_fullreg_trainval/rpn_model_r50_fullreg_step3_voc20072012_trainval.h5 models/voc_r50_fullreg_trainval/detector_model_r50_fullreg_step4_voc20072012_trainval.h5 --voc_path /workplace/aind2/VOCtest/VOC2007/ --det_threshold 0.0 --resize_dims 600,1000 --img_set test --network resnet50 --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r50 on voc 2007 test fullreg adam
+python faster_rcnn/voc_dets.py models/voc_r50_fullreg_adam_trainval/rpn_model_r50_fullreg_adam_step3_voc20072012_trainval.h5 models/voc_r50_fullreg_adam_trainval/detector_model_r50_fullreg_adam_step4_voc20072012_trainval.h5 --voc_path /workplace/aind2/VOCtest/VOC2007/ --det_threshold 0.0 --resize_dims 600,1000 --img_set test --network resnet50 --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r101 on voc 2007 test noreg
+python faster_rcnn/voc_dets.py models/voc_r101_noreg_trainval/rpn_model_r101_noreg_step3_voc20072012_trainval.h5 models/voc_r101_noreg_trainval/detector_model_r101_noreg_step4_voc20072012_trainval.h5 --voc_path /workplace/aind2/VOCtest/VOC2007/ --det_threshold 0.0 --resize_dims 600,1000 --img_set test --network resnet101 --out_dir ./tmpout/ 2>&1 | tee test_r101_det_tmp
+
+Running r101 on voc 2007 test fullreg
+python faster_rcnn/voc_dets.py models/voc_r101_fullreg_trainval/rpn_model_r101_fullreg_step3_voc20072012_trainval.h5 models/voc_r101_fullreg_trainval/detector_model_r101_fullreg_step4_voc20072012_trainval.h5 --voc_path /workplace/aind2/VOCtest/VOC2007/ --det_threshold 0.0 --resize_dims 600,1000 --img_set test --network resnet101 --out_dir ./tmpout/ 2>&1 | tee test_r101_det_tmp
+
+Running vgg16 on voc 2007 test noreg
+python faster_rcnn/voc_dets.py models/voc_vgg16_noreg_trainval/rpn_model_vgg16_noreg_step3_voc20072012_trainval.h5 models/voc_vgg16_noreg_trainval/detector_model_vgg16_noreg_step4_voc20072012_trainval.h5 --voc_path /workplace/aind2/VOCtest/VOC2007/ --det_threshold 0.0 --resize_dims 600,1000 --img_set test --network vgg16 --out_dir ./tmpout/ 2>&1 | tee test_vgg16_det_tmp
+
+Running vgg16 on voc 2007 test fullreg
+python faster_rcnn/voc_dets.py models/voc_vgg16_fullreg_trainval/rpn_model_vgg16_fullreg_step3_voc20072012_trainval.h5 models/voc_vgg16_fullreg_trainval/detector_model_vgg16_fullreg_step4_voc20072012_trainval.h5 --voc_path /workplace/aind2/VOCtest/VOC2007/ --det_threshold 0.0 --resize_dims 600,1000 --img_set test --network vgg16 --out_dir ./tmpout/ 2>&1 | tee test_vgg16_det_tmp
+
+Running r50 on kitti val noreg
+python faster_rcnn/voc_dets.py models/kitti_r50_noreg_train/rpn_model_r50_noreg_step3_kitti_train.h5 models/kitti_r50_noreg_train/detector_model_r50_noreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --anchor_scales 16,32,64,128,256,512 --img_set val --network resnet50 --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r50 on kitti val fullreg
+python faster_rcnn/voc_dets.py models/kitti_r50_fullreg_train/rpn_model_r50_fullreg_step3_kitti_train.h5 models/kitti_r50_fullreg_train/detector_model_r50_fullreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --anchor_scales 16,32,64,128,256,512 --img_set val --network resnet50 --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r101 on kitti val noreg
+python faster_rcnn/voc_dets.py models/unsure_kitti_r101_noreg_train/rpn_model_resnet101_noreg_step3_kitti_train.h5 models/unsure_kitti_r101_noreg_train/detector_model_resnet101_noreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --anchor_scales 16,32,64,128,256,512 --img_set val --network resnet101 --out_dir ./tmpout/ 2>&1 | tee test_r101_det_tmp
+
+Running r50 on kitti val fullreg
+python faster_rcnn/voc_dets.py models/kitti_r50_fullreg_train/rpn_model_r50_fullreg_step3_kitti_train.h5 models/kitti_r50_fullreg_train/detector_model_r50_fullreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --anchor_scales 16,32,64,128,256,512 --img_set val --network resnet50 --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r50 on kitti val fullreg step3 step4 only
+python faster_rcnn/voc_dets.py models/kitti_r50_fullreg_step3_step4_train/rpn_model_r50_fullreg_step3_kitti_train.h5 models/kitti_r50_fullreg_step3_step4_train/detector_model_r50_fullreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --anchor_scales 16,32,64,128,256,512 --img_set val --network resnet50 --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r101 on kitti val fullreg
+python faster_rcnn/voc_dets.py models/kitti_r101_fullreg_train/rpn_model_r101_fullreg_step3_kitti_train.h5 models/kitti_r101_fullreg_train/detector_model_r101_fullreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --anchor_scales 16,32,64,128,256,512 --img_set val --network resnet101 --out_dir ./tmpout/ 2>&1 | tee test_r101_det_tmp
+
+Running r101 on kitti val fullreg
+python src/voc_dets.py models/kitti_r101_fullreg_train/rpn_model_r101_fullreg_step3_kitti_train.h5 models/kitti_r101_fullreg_train/detector_model_r101_fullreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --anchor_scales 16,32,64,128,256,512 --img_set val --out_dir ./tmpout/ 2>&1 | tee test_r101_det_tmp
+
+Running r50 on kitti val fullreg step3 step4 only
+python src/voc_dets.py models/kitti_r50_fullreg_step3_step4_train/rpn_model_r50_fullreg_step3_kitti_train.h5 models/kitti_r50_fullreg_step3_step4_train/detector_model_r50_fullreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --img_set val --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r50 on kitti val noreg
+python src/voc_dets.py models/kitti_r50_noreg_train/rpn_model_r50_noreg_step3_kitti_train.h5 models/kitti_r50_noreg_train/detector_model_r50_noreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --img_set val --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r50 on kitti test
+python src/voc_dets.py models/kitti_r50_train/rpn_model_r50_fullreg_step3_kitti_train.h5 models/kitti_r50_train/detector_model_r50_fullreg_step4_kitti_train.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --img_set val --out_dir ./tmpout/ 2>&1 | tee test_r50_det_tmp
+
+Running r101 on kitti val
+python src/voc_dets.py models/final_kitti_r101_trainval/rpn_model_r101_noreg_step3_kitti_trainval.h5 models/final_kitti_r101_trainval/detector_model_r101_noreg_step4_kitti_trainval.h5 --voc_path /workplace/aind2/VOCdevkit/kitti/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --img_set val --out_dir ./tmpout/ 2>&1 | tee test_r101_det_tmp
+
+Running r101 on kitti test
+python src/voc_dets.py models/final_kitti_r101_trainval/rpn_model_r101_noreg_step3_kitti_trainval.h5 models/final_kitti_r101_trainval/detector_model_r101_noreg_step4_kitti_trainval.h5 --voc_path /workplace/aind2/VOCtest/kitti_test/ --kitti --det_threshold 0.0 --resize_dims 600,1500 --img_set test --out_dir ./tmpout101/ 2>&1 | tee test_r101_det_tmp
+
+rsync -arv --exclude=models/ --exclude=.git --exclude=test_data capstone_project/ aind2@ec2-52-40-130-174.us-west-2.compute.amazonaws.com:/home/aind2/capstone_project/
+
+mAP measurements for voc:
+resnet50
+no regularization
+300 rois
+resnet50 7x7 roi pooling 0.0 threshold: 0.6564
+resnet50 7x7 roi pooling 0.5 threshold: 0.6526
+resnet50 7x7 roi pooling 0.8 threshold: 0.6164
+takes 0.53s per image
+
+128 rois
+resnet50 7x7 roi pooling 0.0 threshold: 0.6499
+resnet50 7x7 roi pooling 0.5 threshold: 0.6499
+resnet50 7x7 roi pooling 0.8 threshold: 0.6062
+takes 0.3s per image
+
+64 rois
+resnet50 7x7 roi pooling 0.0 threshold: 0.6311
+resnet50 7x7 roi pooling 0.5 threshold: 0.6311
+resnet50 7x7 roi pooling 0.8 threshold: 0.5886
+takes 0.22s per image
+
+1e-4 regularization
+300 rois
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.6513
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.6491
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.6158
+takes 0.53s per image
+
+128 rois
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.6487
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.6474
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.6010
+takes 0.3s per image
+
+64 rois
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.6228
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.6150
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.5767
+takes 0.22s per image
+
+1e-4 regularization adam
+300 rois
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.5798
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.5732
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.5149
+takes 0.53s per image
+
+resnet101
+no regularization
+300 rois
+resnet101 7x7 roi pooling 0.0 threshold: 0.6557
+resnet101 7x7 roi pooling 0.5 threshold: 0.6557
+resnet101 7x7 roi pooling 0.8 threshold: 0.6219
+takes 0.63s per image
+
+128 rois
+resnet101 7x7 roi pooling 0.0 threshold: 0.6529
+resnet101 7x7 roi pooling 0.5 threshold: 0.6497
+resnet101 7x7 roi pooling 0.8 threshold: 0.6186
+takes 0.39s per image
+
+64 rois
+resnet101 7x7 roi pooling 0.0 threshold: 0.6463
+resnet101 7x7 roi pooling 0.5 threshold: 0.6463
+resnet101 7x7 roi pooling 0.8 threshold: 0.6163
+takes 0.3s per image
+
+1e-4 regularization
+300 rois
+resnet101 7x7 roi pooling 300 rois 0.0 threshold: 0.6565
+resnet101 7x7 roi pooling 300 rois 0.5 threshold: 0.6507
+resnet101 7x7 roi pooling 300 rois 0.8 threshold: 0.6198
+takes 0.64s per image
+
+128 rois
+resnet101 7x7 roi pooling 300 rois 0.0 threshold: 0.6551
+resnet101 7x7 roi pooling 300 rois 0.5 threshold: 0.6504
+resnet101 7x7 roi pooling 300 rois 0.8 threshold: 0.6116
+takes 0.39s per image
+
+64 rois
+resnet101 7x7 roi pooling 300 rois 0.0 threshold: 0.6508
+resnet101 7x7 roi pooling 300 rois 0.5 threshold: 0.6476
+resnet101 7x7 roi pooling 300 rois 0.8 threshold: 0.6046
+takes 0.31s per image
+
+vgg16
+5e-4 regularization
+300 rois
+vgg16 7x7 roi pooling 0.0 threshold: 0.5970
+vgg16 7x7 roi pooling 0.5 threshold: 0.5885
+vgg16 7x7 roi pooling 0.8 threshold: 0.5192
+takes 0.41s per image
+
+128 rois
+vgg16 7x7 roi pooling 0.0 threshold: 0.5877
+vgg16 7x7 roi pooling 0.5 threshold: 0.5801
+vgg16 7x7 roi pooling 0.8 threshold: 0.5075
+takes 0.32s per image
+
+64 rois
+vgg16 7x7 roi pooling 0.0 threshold: 0.5710
+vgg16 7x7 roi pooling 0.5 threshold: 0.5646
+vgg16 7x7 roi pooling 0.8 threshold: 0.4928
+takes 0.3s per image
+
+mAP measurements for kitti:
+no regularization
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.5872
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.5872
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.5525
+300 rois take 0.63s per image
+
+resnet50 7x7 roi pooling 128 rois 0.0 threshold: 0.5698
+resnet50 7x7 roi pooling 128 rois 0.5 threshold: 
+resnet50 7x7 roi pooling 128 rois 0.8 threshold: 
+128 rois take 0.38s per image
+
+resnet50 7x7 roi pooling 64 rois 0.0 threshold: 0.5314
+resnet50 7x7 roi pooling 64 rois 0.5 threshold: 
+resnet50 7x7 roi pooling 64 rois 0.8 threshold: 
+64 rois take 0.3s per image
+
+no regularization
+resnet101 7x7 roi pooling 300 rois 0.0 threshold: 0.6138
+resnet101 7x7 roi pooling 300 rois 0.5 threshold: 0.6015
+resnet101 7x7 roi pooling 300 rois 0.8 threshold: 0.5698
+300 rois take 0.7s per image
+
+1e-4 regularization
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.6088
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.6021
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.5629
+300 rois take 0.6s per image
+
+resnet50 7x7 roi pooling 128 rois 0.0 threshold: 0.5818
+resnet50 7x7 roi pooling 128 rois 0.5 threshold: 0.5818
+resnet50 7x7 roi pooling 128 rois 0.8 threshold: 0.5218
+128 rois take 0.35s per image
+
+resnet50 7x7 roi pooling 64 rois 0.0 threshold: 0.5383
+resnet50 7x7 roi pooling 64 rois 0.5 threshold: 
+resnet50 7x7 roi pooling 64 rois 0.8 threshold: 
+64 rois take 0.28s per image
+
+resnet101 1e-4 regularization
+resnet101 7x7 roi pooling 300 rois 0.0 threshold: 0.6363
+resnet101 7x7 roi pooling 300 rois 0.5 threshold: 0.6293
+resnet101 7x7 roi pooling 300 rois 0.8 threshold: 0.5713
+300 rois take 0.7s per image
+
+resnet101 7x7 roi pooling 128 rois 0.0 threshold: 0.5829
+128 rois take 0.45s per image
+
+resnet101 7x7 roi pooling 64 rois 0.0 threshold: 0.5727
+64 rois take 0.37s per image
+
+1e-4 regularization step 3 and 4 only
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.5719
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 
+300 rois take 0.63s per image
+
+resnet50 7x7 roi pooling 128 rois 0.0 threshold: 0.5178
+resnet50 7x7 roi pooling 128 rois 0.5 threshold: 
+resnet50 7x7 roi pooling 128 rois 0.8 threshold: 
+128 rois take 0.38s per image
+
+resnet50 7x7 roi pooling 64 rois 0.0 threshold: 0.4652
+resnet50 7x7 roi pooling 64 rois 0.5 threshold: 
+resnet50 7x7 roi pooling 64 rois 0.8 threshold: 
+64 rois take 0.3s per image
+
+mAP measurements for kitti:
+resnet50 7x7 roi pooling 300 rois 0.0 threshold: 0.7136
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.7136
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.6647
+300 rois take 0.6s per image
+
+mAP measurements for kitti:
+resnet101 7x7 roi pooling 300 rois 0.0 threshold: 0.7068
+resnet50 7x7 roi pooling 300 rois 0.5 threshold: 0.7068
+resnet50 7x7 roi pooling 300 rois 0.8 threshold: 0.6647
+300 rois take 0.6s per image
+
+to do cleanup:
+remove extra copies of vgg functions, check if they still work
+rename training managers
+maybe get rid of ImageMetadata
+
+done cleanup:
+delete commented out code in step1, step2, step3, step4
+deleted unused code in voc_dets
+deleted commented out code everywhere else too
+move util functions that use keras/tf into train_util
+delete resnet101.py
+consolidated test weights and test data in the same directory
+delete unused code in custom_layers
+refactor functions in annotate_video.py
+added docs to all public functions
+
+to do rpn:
+
+done rpn:
+finish VOC helpers
+make script that trains model
+implement correct weight initializations and add momentum
+add more args to train_rpn
+add way to decrease learning rate
+save weights at end
+only finding gt regions near x = 0, wtf? though it looks reasonably accurate
+check rpn_y_true and try it out on an image 000147, expect to find 7 chairs
+also check what the rpn predicts for this image and what gets fed into nms
+
+to do classifier:
+freeze batch norm layers
+freeze conv 1-3 blocks
+try sgd
+divide bbreg params as mentioned in speed/accuracy tradeoffs paper
+cache rpn outputs to train faster
+try switching to 7x7 roi pooling and change conv5 stride to 1 - supposed to help with small objects?
+try getting rid of horizontal flip
+try normalizing bbreg targets, see official repo's division
+try 1e-6 learning rate?
+try changing resize_image to crop_and_resize?
+
+done classifier:
+what is class_mapping?
+what are the coords in rpn_to_roi? actual or feature map
+get output format of rpn model predict
+translate output into rois
+nms the rois
+split rois into pos and neg samples
+initialize weights properly
+debug negative roi coords: not caused by get_ious, debug nms or reshape next
+figure out why the loss function explodes
+round/truncate to integer x1,y1,x2,y2
+fixed bad rounding of gt roi
+build classifier model sharing a base with the rpn
+figure out why stride is out of bounds for img 000147
+figure out why time distributed is used
+
+to do test:
+
+done test:
+get class mapping from training set
+load rpn and detector models with saved weights
+test out on one image at first
+show box in plot
+predict rois with rpn
+predict classification and bb with detector, in batches of 64
+concatenate all predictions
+nms predictions
+something's wrong with bb predictors?
+run map calculation
+
+to do refactoring:
+set up resnet base correctly with StaticBatchNormalization
+delete duplicate code
+save VOC class mapping to a file to maintain consistency
+
+done refactoring:
+change bbox_coords to x1,y1,x2,y2
+change anchor_coords to x1,y1,x2,y2
+change calc_iou to x1,y1,x2,y2
+change get_reg_params to x1,y1,x2,y2
+move vgg constants into vgg file: stride, num features 512
+create a class for box
+refactor rpn_y_true into multiple functions
+save only the last conv layer during testing to reduce repo size
+add in 50% chance flip for training
+add in mean subtraction/std normalization for training - see rgirshick's repo
+
+to do long term:
+refactor print into logger statements
+
+done long term:
+confirm consistency of x1,y1 vs center x,y
+change xmin, xmax, etc to x1 x2
+encapsulate base network specifics
+change all coords format to x1 y1 x2 y2
+refactor coords into a box class
+refactor image into a class for content and metadata
+
+det refactor plan:
+copy train_vgg16_frcnn_step2 into another function for refactoring, time the performance when refactoring
+move most train_vgg16_frcnn_step2 code into a new function det_y_true_batch
+change get_rois and following code up to nms to avoid ridiculous reshaping/transposing, have format be box_idx:coords
+rewrite get_ious: switch to using image and box classes, use functions to get reg targets,
+separate out an apply_sampling function
+
+
+# strange testing difference
+before resize:
+[10 9 11]
+after resize:
+[-93.85478377 -107.68616553 -112.19859116]
+caused by resizing after preprocessing, should be the other way around
+
+
+=== rpn training refactoring ===
+
+class RpnTrainingManager
+cache object contains can_use, is_pos, and bbreg_targets
+cache key has two components: img name, is_flipped
+
+calc_conv_dims and stride are stored upon initialization
+provides a method rpn_y_true
+* takes 1 image as an argument, and uses its own stored calc_conv_dims and stride
+* calls a private method similar to rpn_y_true_single but stores result in a cache
+* retrieves results from cache and applies sampling, then batches sampled results
+
+
+reg params implementations...
+get_reg_params in rpn_util
+
+
+=== end rpn training refactoring ===
+
+=== det training refactoring ===
+
+break rois_from_image into separate methods?
+
+=== end  training refactoring ===
+
+
+all_imgs
+returned by get_data(input_path)
+all_imgs: list of annotation_data
+classes_count: dict with key class name, value count
+class_mapping: dict with key class name, value index? seems to map class name to index in some array, i.e. enumerates class names
+'bg' appears in classes_count and class_mapping too
+
+trainval_files: list of paths in trainval.txt
+annots: list of paths in the annotations dir
+annotation_data: dict with filepath, height, set name (trainval/test), bboxes
+bboxes: dict with class name, x1, x2, y1, y2, difficulty
+
+all_imgs is randomly shuffled
+
+train_imgs: subset of all_imgs with imageset 'trainval'
+val_imgs: subset of all_imgs with imageset 'test'
+
+
+data_gen_train
+
+=== data_generators.get_anchor_gt(train_imgs, classes_count, config, nn.get_image_output_length, image dim ordering, mode='train')
+
+
+generator function that runs in an infinite loop
+iterates over all images
+uses a SampleSelector at the start to decide whether to skip or not
+SampleSelector.skip_sample_for_balanced_class - examines image's bboxes, checks if any class is the current class, returns false if so, otherwise true. If equal to current class, also change current class to the next one in a cycle of a list of classes. Seems to be an inefficient way of ensuring 1 of each class?
+
+nn.get_image_output_length is a function per nn:
+=== vgg.get_img_output_length(width, height): returns a function that divides both by 16, because the last conv layer in vgg16 has an accumulated stride of 16
+
+=== augment(img_data, config, augment=True)
+img_data_aug = deep copy of img_data. Can flip horizontally, vertically, rotate by multiples of 90 degrees (0, 90, 180, 270), same format as img_data
+x_img = same as img_data
+only augment during training mode
+
+assert that the width/height dimensions of img_data_aug are the same as those of x_img
+
+width, height = img_data_aug dimensions
+rows, cols = x_img dimensions
+
+resized_width, resized_height = resized dimensions
+=== get_new_img_size(width, height, config.im_size = 600px)
+whichever is smaller between width and height, scales that up to 600px and scales the other dimension by the same ratio
+
+x_img is resized by cv2 to the resized_width and resized_height
+
+=== y_rpn_cls, y_rpn_regr = calc_rpn(config, img_data_aug (wasn't resized yet), width, height, resized_width, resized_height, img_length_calc_function)
+
+downscale = 16 hardcoded, change this depending on nn stride
+num_anchors = 9, using default scales and sizes it seems
+output_width, output_height = img_length_calc_function(resized_width, resized_height), e.g. 1000x600 input shape, divide both by 16 to get the last conv layer dimensions
+
+# why does height come before width???
+y_rpn_overlap = zeros tensor with dims (output_height, output_width, num_anchors) # whether or not an anchor is a positive for any gt bbox
+y_is_box_valid = zeros tensor with dims (output_height, output_width, num_anchors) # whether or not an anchor contributes to the loss function
+y_rpn_regr = zeros tensor with dims (output_height, output_width, 4 * num_anchors) # bbox regression target for an anchor
+
+num_bboxes = number of bboxes in the image as retrieved from img_data_aug
+
+num_anchors_for_bbox = zeros vector of length num_bboxes, ints
+best_anchor_for_bbox = tensor of dims [num_bboxes, 4], ints initialized to -1
+best_iou_for_bbox = zeros vector of length num_bboxes, float32s
+best_x_for_bbox = zeros tensor of dims [num_bboxes, 4], ints
+best_dx_for_bbox = zeros tensor of dims [num_bboxes, 4], float32s
+
+gta = zeros tensor of dims [num_bboxes, 4], coords of ground truth bboxes
+enumerate over bboxes and set gta[bbox_num, 0:4] = bbox coordinates scaled to resized height/width, using original width to calculate the scaling factor
+
+# calculating rpn ground truths
+for anchor_size_idx in 0...num_anchor_sizes:
+    for anchor_ratio_idx in 0...num_anchor_ratios:
+        anchor_x, anchor_y = width/height of anchor, i.e. 128x128, 128x256, 256x128, etc in that order
+
+        for ix in range(output_width): // conv layer coord
+            x1_anc, x2_anc = upscaled anchor xmin/xmax, calculated by finding center of current conv position, adding/subtracting 0.5 * anchor_x
+            skip if x1_anc < 0 or x2_anc > resized_width
+
+            for jy in range(output_height): // conv layer coord
+                y1_anc, y2_anc = upscaled anchor ymin/ymax, calculated just as x1_anc/x2_anc
+                skip if y1_anc < 0 or x2_anc > resized_height
+
+                bbox_type = 'neg'
+                best_iou_for_loc = 0.0
+
+                for bbox_num in range(num_bboxes):
+                    curr_iou = iou(current bbox coords, current anchor coords)
+                    if curr_iou > best_iou_for_bbox[bbox_num] or curr_iou > config.rpn_max_overlap: (default to 0.7)
+                        store cx and cy (center of bbox), cxa and cya (center of anchor)
+                        store tx and ty (direction to find gt center scaled by anc dims), tw and th (log of scaling factor of height/width to go from anchor dims to gt dims)
+
+                    if bboxes[bbox_num].class != 'bg':
+                        if curr_iou > best_iou_for_bbox[bbox_num]:
+                            best_anchor_for_bbox[bbox_num] = [jy, ix, anchor_ratio_idx, anchor_size_idx] // probably can translate into a single anchor idx
+                            best_iou_for_bbox[bbox_num] = curr_iou
+                            best_x_for_bbox[bbox_num, :] = anchor coords x1 x2 y1 y2
+                            best_dx_for_bbox[bbox_num, :] = anchor translations tx ty tw th
+                            // can probably combine this block with the previous if block somehow
+
+                        if curr_iou > config.rpn_max_overlap:
+                            bbox_type = 'pos'
+                            num_anchors_for_bbox[bbox_num] += 1
+
+                            if curr_iou > best_iou_for_loc: // update reg layer target
+                                best_iou_for_loc = curr_iou
+                                best_regr = tx,ty,tw,th
+
+                        if config.rpn_min_overlap < curr_iou < config.rpn_max_overlap: // neutral
+                            bbox_type = 'neutral' if bbox_type != 'pos'
+
+                let anchor_idx = anchor_ratio_idx + num_anchor_ratios * anchor_ratio_idx
+                if bbox_type == 'neg':
+                    y_is_box_valid[jy, ix, anchor_idx] = 1
+                    y_rpn_overlap[jy, ix, anchor_idx] = 0
+                elif bbox_type == 'neutral':
+                    y_is_box_valid[jy, ix, anchor_idx] = 0
+                    y_rpn_overlap[jy, ix, anchor_idx] = 0
+                elif bbox_type == 'pos':
+                    y_is_box_valid[jy, ix, anchor_idx] = 1
+                    y_rpn_overlap[jy, ix, anchor_idx] = 1
+
+    # ensure every anchor has at least one positive rpn region
+    for idx in range(num_bboxes):
+        if num_anchors_for_bbox[idx] == 0:
+            if best_anchor_for_bbox[idx, 0] == -1 (i.e. not initialized):
+                skip
+            let anchor_idx = best_anchor_for_bbox[idx, 2] + n_anchratios * best_anchor_for_bbox[idx, 3]
+            let output_y = best_anchor_for_bbox[idx, 0]
+            let output_x = best_anchor_for_bbox[idx, 1]
+            y_is_box_valid[output_y, output_x, anchor_idx] = 1
+            y_rpn_overlap[output_y, output_x, anchor_idx] = 1
+            let start = 4 * anchor_idx
+            y_rpn_regr[output_y, output_x, start:start+4] = best_dx_for_bbox[idx, :]
+
+    y_rpn_overlap = np.transpose(y_rpn_overlap, (2, 0, 1)) # i.e. anchor coords, then y, then x
+    y_rpn_overlap = np.expand_dims(y_rpn_overlap, axis=0) # inserts new dimension, i.e. batch number, then anchor coords, then y, then x
+
+    y_is_box_valid = np.transpose(y_is_box_valid, (2, 0, 1)) # i.e. anchor coords, then y, then x
+    y_is_box_valid = np.expand_dims(y_is_box_valid, axis=0) # inserts new dimension, i.e. batch number, then anchor coords, then y, then x
+
+    # get anchor coords indexes of positive anchors, and negative anchors
+    pos_locs = np.where(np.logical_and(y_rpn_overlap[0, :, :, :] == 1, y_is_box_valid[0, :, :, :] == 1))
+    neg_locs = np.where(np.logical_and(y_rpn_overlap[0, :, :, :] == 0, y_is_box_valid[0, :, :, :] == 1))
+
+    num_pos = len(pos_locs[0]) # number of positive anchors
+    num_neg = len(neg_locs[0]) # number of negative anchors
+    num_regions = 256 hardcoded
+
+    if num_pos > num_regions/2: # more than 128 positive anchors
+        val_locs = random.sample(range(num_pos), nums_pos - 128)
+        y_is_box_valid[0, pos_locs[0][val_locs], pos_locs[1][val_locs], pos_locs[2][val_locs]] = 0
+        num_pos = num_regions/2
+
+    if num_negs + num_pos > num_regions: # more than 256 total anchors, with at most 128 pos
+        val_locs = random.sample(range(num_neg, num_neg - num_pos)
+        y_is_box_valid[0, neg_locs[0][val_locs], neg_locs[1][val_locs], neg_locs[2][val_locs]] = 0
+
+    # now has a 0th dimension with only 0 as the batch number, and 1st dimension is 2 * num_anchors
+    y_rpn_cls = np.concatenate([y_is_box_valid, y_rpn_overlap], axis=1)
+    # has a 0th dimension with only 0, 1st dimension has 2 * 4 * num_anchors, 
+    y_rpn_regr = np.concatenate([np.repeat(y_rpn_overlap, 4, axis=1), y_rpn_regr], axis=1)
+
+    return y_rpn_cls, y_rpn_regr
+
+=== end calc_rpn, back to get_anchor_gt
+
+x_img = x_img[:,:, (2,1,0)] # BRG -> RGB
+x_img = x_img.astype(np.float32)
+x_img[:,:,0:2] -= config.img_channel_mean
+x_img /= config.img_scaling_factor # is 1.0
+x_img = np.transpose(x_img, (2,0,1)) # becomes RGB first, then x and y coords?
+x_img = np.expand_dims(x_img, axis=0) # inserts a 0 dimension with nothing but a 0
+
+y_rpn_regr[:, y_rpn_regr.shape[1]//2:, :, :] *= config.std_scaling # multiplies stdev by 4 for regression targets portion of the tensor
+
+if tensorflow:
+    x_img = np.transpose(x_img, (0, 2, 3, 1)) # change dims order to anchor_idx, y, x?
+    y_rpn_cls = np.transpose(y_rpn_cls, (0, 2, 3, 1))
+    y_rpn_regr = np.transpose(y_rpn_regr, (0, 2, 3, 1))
+
+yields copy of x_img, copy of [y_rpn_cls, y_rpn_regr], non-copy of img_data_aug
+
+=== end of get_anchor_gt
+
+per image:
+    anchors = get_anchors(image)
+    anchor_gt_boxes = np.array(num_anchors)
+    highest_iou_for_boxes = np.array(num_boxes)
+    highest_iou_idx = np.array(num_boxes)
+    for each gt box i
+        highest_bb = np.array(num_anchors)
+        highest_rp = null
+        highest_rp_idx = null
+        for each anchor j
+            iou[i][j] = calc_iou(gt[i], anchor[j])
+            if (iou[i][j] > highest_iou_for_boxes[i])
+                highest_iou_for_boxes[i] = iou[i][j]
+                highest_iou_idx[i] = j
+            highest_bb[j] = max(highest_bb[j], iou[i][j])
+            if iou[i][j] > 0.7
+                score[j] = 1
+                anchor_gt_boxes[j] = [i]
+
+        scores[highest_rp_idx] = 1
+        anchor_gt_boxes[highest_rp_idx] = i if !anchor_gt_boxes[highest_rp_idx]
+    
+    for idx in highest_bb.idx_where(value < 0.3)
+        score[idx] = 0
+
+
+CLASSIFICATION STUFF
+
+R = roi_helpers.rpn_to_roi(P_rpn[0], P_rpn[1], config, K.image_dim_ordering(), use_regr=True, overlap_thresh=0.7, max_boxes=300)
+
+=== rpn_to_roi
+
+regr_layer = regr_layer / config.std_scaling # divide by 4?
+
+anchor_sizes = config.anchor_box_scales
+anchor_ratios = config.anchor_box_ratios
+
+rows, cols = rpn_layer.shape[1:3] # y, x
+
+#insert 4 coordinates as axis 0
+A = np.zeros((4, rpn_layer.shape[1:4]))
+
+anchor_idx = 0
+for anchor_size in anchor_sizes:
+    for anchor_ratio in anchor_ratios:
+        anchor_x = (anchor_size * anchor_ratio[0]) / config.rpn_stride
+        anchor_y = (anchor_size * anchor_ratio[1]) / config.rpn_stride
+
+        # this anchor's targets for all conv locations
+        regr = regr_layer[0, :, :, 4*anchor_idx:4*anchor_idx + 4]
+        regr = np.tranpose(regr, (2, 0, 1)) # (t component, y, x)
+
+        # X is [0, 1, ..., cols-1] repeated columns, Y is [0, 1, ..., rows-1] repeated rows
+        X, Y = np.meshgrid(np.arange(cols), np.arange(rows))
+
+        # subtract width/2 from center to get start col
+        A[0, :, :, anchor_idx] = X - anchor_x/2
+        # subtract height/2 from center to get start row
+        A[1, :, :, anchor_idx] = Y - anchor_y/2
+        # set width and height
+        A[2, :, :, anchor_idx] = anchor_x
+        A[3, :, :, anchor_idx] = anchor_y
+
+        # before: anchor x1, anchor y1, anchor width, anchor height
+        A[:, :, :, anchor_idx] = apply_regr_np(A[:, :, :, anchor_idx], regr)
+
+=== apply_regr_np
+# format is coords in units of stride, anchor y, anchor x
+x = X[0, :, :]
+y = X[1, :, :]
+w = X[2, :, :]
+h = X[3, :, :]
+
+# transform with format t component, anchor y, anchor x
+tx = T[0, :, :]
+ty = T[1, :, :]
+tw = T[2, :, :]
+th = T[3, :, :]
+
+# get original centers
+cx = x + w/2
+cy = y + h/2
+# get transformed centers
+cx1 = tx * w + cx
+cy1 = ty * h + cy
+
+# get transformed width/height in units of stride
+w1 = np.exp(tw.astype(np.float64)) * w
+h1 = np.exp(th.astype(np.float64)) * h
+# get transformed top left corner
+x1 = cx1 - w1/2
+y1 = cy1 - h1/2
+
+x1 = np.round(x1)
+y1 = np.round(y1)
+w1 = np.round(w1)
+h1 = np.round(h1)
+
+# joins all of these along axis 0, i.e. back to the format of ((coords), conv y, conv x)
+#seems to be all x1s, then all y1s, etc
+return np.stack([x1, y1, w1, h1])
+
+=== end apply_regr_np
+
+        # After: roi x1, roi y1, roi width, roi height
+        # ensure width/height are at least 1
+        A[2, :, :, anchor_idx] = np.maximum(1, A[2, :, :, anchor_idx])
+        A[3, :, :, anchor_idx] = np.maximum(1, A[3, :, :, anchor_idx])
+        # change width/height into bottom right coords
+        A[2, :, :, anchor_idx] += A[0, :, :, anchor_idx]
+        A[3, :, :, anchor_idx] += A[1, :, :, anchor_idx]
+
+        # ensure top left coords are at least 0, at most cols-1 and rows-1
+        A[0, :, :, anchor_idx] = np.maximum(0, A[0, :, :, anchor_idx])
+        A[1, :, :, anchor_idx] = np.maximum(0, A[1, :, :, anchor_idx])
+        A[2, :, :, anchor_idx] = np.minimum(cols-1, A[2, :, :, anchor_idx])
+        A[3, :, :, anchor_idx] = np.minimum(rows-1, A[3, :, :, anchor_idx])
+        
+        # rois are now truncated to fit in the img
+
+# first change to (coord, anchor_idx, conv y, conv x)
+# next reshape to (coord, composite index of anchor_idx, conv y, conv x)
+# then switch orders to (composite index, coord)
+all_boxes = np.reshape(A.transpose((0, 3, 1, 2)), (4, -1)).transpose((1, 0))
+# becomes single dimensional array
+all_probs = rpn_layer.transpose((0, 3, 1, 2)).reshape((-1))
+
+x1 = all_boxes[:, 0]
+y1 = all_boxes[:, 1]
+x2 = all_boxes[:, 2]
+y2 = all_boxes[:, 3]
+
+# remove invalid or 0-sized boxes
+idxs = np.where((x1 - x2 >= 0) | (y1 - y2 >= 0))
+
+all_boxes = np.delete(all_boxes, idxs, 0)
+all_probs = np.delete(all_probs, idxs, 0)
+
+result = non_max_suppression_fast(all_boxes, all_probs, overlap_thresh=overlap_thresh, max_boxes=max_boxes)[0]
+
+=== non_max_suppression_fast
+
+return [] if empty input
+
+x1 = boxes[:, 0]
+y1 = boxes[:, 1]
+x2 = boxes[:, 2]
+y2 = boxes[:, 3]
+
+np.testing.assert_array_less(x1, x2)
+np.testing.assert_array_less(y1, y2)
+
+cast boxes to float if integers, not needed in python 3?
+
+pick = []
+area = (x2 - x1) * (y2 - y1)
+
+# sort by probability of being an object
+idxs = np.argsort(probs)
+
+while len(idxs) > 0:
+     # get idx of box with highest prob
+     last = len(idxs) - 1
+     i = idxs[last]
+     # choose this one
+     picks.append(1)
+
+     # get intersection with highet prob box
+     xx1_int = np.maximum(x1[i], x1[idxs[:last]])
+     yy1_int = np.maximum(y1[i], y1[idxs[:last]])
+     xx2_int = np.minimum(x2[i], x2[idxs[:last]])
+     yy2_int = np.minimum(y2[i], y2[idxs[:last]])
+
+     # use maximum because intersection could be negative
+     ww_int = np.maximum(0, xx2_int - xx1_int)
+     hh_int = np.maximum(0, yy2_int - yy1_int)
+
+     area_int = ww_int * hh_int
+
+     # find the union
+     area_union = area[i] + area[idxs[:last]] - area_int
+     # get iou, with 1e-6 to protect from divide by 0
+     overlap = area_int/(area_union + 1e-6)
+
+     # delete indexes with overlap more than the threshold
+     idxs = np.delete(idxs, np.concatenate(([last], np.where(overlap > overlap_thresh)[0])))
+
+     # only increased pick by 1 at a time so it's safe to do this
+     if len(pick) >= max_boxes:
+         break
+
+boxes = boxes[pick].astype("int")
+probs = probs[pick]
+return boxes, probs
+
+=== end non_max_suppression_fast
+
+return result
+
+=== end rpn_to_roi
+
+# summary of rpn_to_roi:
+1. recreate anchor boxes as (cxa, cya, wa, ha)
+2. change center back to top left for some reason
+3. apply transforms to get (cx, cy, w, h) of actual prodicted boxes after changing back to center
+4. change center to top left to get cx1, cy1, w, h
+5. change w, h into bottom right coords x2, y2
+6. truncate (x1, y2, x2, y2) to fit within the image boundary
+7. reshape to 2 dimensions by combining anchor idx, y conv, x conv into a single index
+8. reverse dimensions to get (box index, box coords) for coords, (box index, probs) for probs
+9. apply nms to reduce the number of boxes to max_boxes or fewer
+10. return reduced boxes and their corresponding probs
+
+back to train_frcnn...
+
+R is now box coords
+X2, Y1, Y2, IouS = roi_helpers.calc_iou(R, img_data, config, class_mapping)
+
+=== calc_iou
+
+bboxes = img_data['bboxes']
+(width, height) = img_data['width'], img_data['height']
+# resized so that the minimum dimension is 600 pixels
+(resized_width, resized_height) = data_generators.get_new_img_size(width, height, config.img_size) # img_size is 600
+
+# ground truth coords?
+gta = np.zeros((len(bboxes), 4))
+
+for bbox_num, bbox in enumerate(bboxes):
+    gta[bbox_num, 0] = int(round(bbox['x1'] * (resized_width / float(width)) / config.rpn_stride))
+    gta[bbox_num, 1] = int(round(bbox['x2'] * (resized_width / float(width)) / config.rpn_stride))
+    gta[bbox_num, 2] = int(round(bbox['y1'] * (resized_height / float(height)) / config.rpn_stride))
+    gta[bbox_num, 3] = int(round(bbox['y21'] * (resized_height / float(height)) / config.rpn_stride))
+
+# gta is now coords of actual bboxes
+x_roi = []
+y_class_num = []
+y_class_regr_coords = []
+y_class_regr_label = []
+IouS = []
+
+# ix seems to be box index, iterate proposed regions
+for ix in range(R.shape[0]):
+    (x1, y1, x2, y2) = R[ix, :]
+    x1 = int(round(x1))
+    y1 = int(round(y1))
+    x2 = int(round(x2))
+    y1 = int(round(y1))
+
+    best_iou = 0.0
+    best_bbox = -1
+    # map each roi to the gt box with which it has the highest iou
+    for bbox_num in range(len(bboxes)):
+        curr_iou = data_generators.iou([gta[bbox_num, 0], gta[bbox_num, 2], gta[bbox_num, 1], gta[bbox_num, 3]], [x1, y1, x2, y2])
+        if curr_iou > best_iou:
+            best_iou = curr_iou
+            best_bbox = bbox_num
+
+    # min overlap is 0.1
+    if best_iou < config.classifier_min_overlap:
+        continue
+    else:
+    # iou >= 0.1 at this point
+        w = x2 - x1
+        h = y2 - y1
+        x_roi.append([x1, y1, w, h])
+        IoUs.append(best_iou)
+
+        # between 0.1 and 0.5
+        if config.classifier_min_overlap <= best_iou < config.classifier_max_overlap:
+            cls_name = 'bg'
+        elif config.classifier_max_overlap <= best_iou:
+            cls_name = bboxes[best_bbox]['class']
+            # gt box center
+            cxg = (gta[best_bbox, 0] + gta[best_bbox, 1]] / 2.0
+            cyg = (gta[best_bbox, 2] + gta[best_bbox, 3]] / 2.0
+
+            cx = x1 + w / 2.0
+            cy = y1 + h / 2.0
+
+            tx = (cxg - cx) / float(w)
+            ty = (cyg - cy) / float(h)
+            tw = np.log((gta[best_bbox, 1] - gta[best_bbox, 0]) / float(w))
+            th = np.log((gta[best_bbox, 3] - gta[best_bbox, 2]) / float(h))
+        else:
+            raise error
+
+    # class_label is a one hot encoding
+    class_num = class_mapping[cls_name]
+    class_label = len(class_mapping) * [0]
+    class_label[class_num] = 1
+    y_class_num.append(copy.deepcopy(class_label))
+    # subtract 1 because we don't care about bg
+    coords = [0] * 4 * (len(class_mapping) - 1)
+    labels = [0] * 4 * (len(class_mapping) - 1)
+    
+    if cls_name != 'bg':
+        label_pos = 4 * class_num
+        # don't know why this is done
+        sx, sy, sw, sh = config.classifier_regr_std
+        coords[label_pos:label_pos+4] = [sx * tx, sy * ty, sw * tw, sh * th]
+        labels[label_pos:label_pos+4] = [1, 1, 1, 1]
+    # append coords and positive label if needed, otherwise 0s
+    y_class_regr_coords.append(copy.deepcopy(coords))
+    y_class_regr_label.append(copy.deepcopy(labels))
+
+if (len(x_roi)) == 0:
+    return None, None, None, None
+
+# roi coordinates
+X = np.array(x_roi)
+# which class an roi corresponds to
+Y1 = np.array(y_class_num)
+# concatenation of which class a set of coords corresponds to, and transform params
+Y2 = np.concatenate([np.array(y_class_regr_label), np.array(y_class_regr_coords)], axis=1)
+
+return np.expand_dims(X, axis=0), np.expand_dims(Y1, axis=0), np.expand_dims(Y2, axis=0), IoUs
+
+=== end calc_iou
+
+back to train_frcnn
+
+skip this iteration if no rois with >= 0.1 iou with a gt box
+
+# last index, the bg index, is set to true in the one hot encoding
+neg_samples = np.where(Y1[0, :, -1] == 1)
+pos_samples = np.where(Y1[0, :, -1] == 0)
+
+if len(neg_samples) > 0:
+    neg_samples = neg_samples[0]
+else:
+    neg_samples = []
+
+if len(pos_samples) > 0:
+    pos_samples = pos_samples[0]
+else:
+    pos_samples = []
+
+if config.num_rois > 1:
+    if len(pos_samples) < config.num_rois // 2:
+        selected_pos_samples = pos_samples.tolist()
+    else:
+        selected_pos_samples = np.random.choice(pos_samples, config.num_rois // 2, replace=False).tolist()
+    try:
+        selected_neg_samples = np.random.choice(neg_samples, config.num_rois - len(selected_pos_samples), replace=False).tolist()
+    except:
+        selected_neg_samples = np.random.choice(neg_samples, config.num_rois - len(selected_pos_samples), replace=True).tolist()
+
+    sel_samples = selected_pos_samples + selected_neg_samples
+else:
+    # only want 1 sample?
+    selected_pos_samples = pos_samples.tolist()
+    selected_neg_samples = neg_samples.tolist()
+    # 50% chance of pos or neg, regardless of how many of each?
+    if np.random.randint(0, 2):
+        sel_samples = random.choice(neg_samples)
+    else:
+        sel_samples = random.choice(pos_samples)
+
+# X is image data, Y1 is classification results with hot encode, Y1 is regr results with hot encode
+loss_class = model_classifier.train_on_batch([X, X2[:, sel_samples, :]], [Y1[:, sel_samples, :], Y2[:, sel_samples, :]])
+
+
+try training on:
+2008_002961
+
+to adapt new codebase to step 4:
+update process to store conv if present
+update get_training_input to return the batched image if step2, return the conv if step4
+if conv is present, 
