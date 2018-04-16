@@ -2,6 +2,8 @@
 
 This project is a Keras implementation of Faster-RCNN. It can use VGG16, ResNet-50, or ResNet-101 as the base architecture. It has been trained on the PASCAL VOC 2007/2012 object detection image sets, as well as the KITTI 2D object detection set for self-driving vehicles.
 
+See the [Project Report](project_report.pdf) for more information on implementation details.
+
 ## Video Demo
 
 [![ResNet-50 Demo](https://img.youtube.com/vi/OrxENIKjaOI/0.jpg)](https://www.youtube.com/watch?v=OrxENIKjaOI)
